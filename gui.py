@@ -90,6 +90,10 @@ def pitch_to_frequency(pitch):
     return frequency
 
 def pitch_difference(frequency1, frequency2):
+    # Check if any of the frequencies are zero or very close to zero
+    if frequency1 <= 0 or frequency2 <= 0:
+        return float('inf')  # Return positive infinity to indicate a large difference
+
     # Calculate the pitch in semitones
     pitch1 = 69 + 12 * np.log2(frequency1 / 440)
     pitch2 = 69 + 12 * np.log2(frequency2 / 440)
@@ -172,12 +176,16 @@ class FrequencyGuessingGame:
 
         play_tone(self.actual_frequency, self.sinewave, duration_ms=2000)
 
-        # self.label_frequency.config(text=f"Frequency: {self.actual_frequency:.2f} Hz")
-        # self.update_frequency_pitch_labels(self.slider.get())
-        # self.label_pitch.config(text=f"Pitch: {self.actual_pitch}")
+        guess_freq = self.slider.get()
+        if guess_freq is None or guess_freq <= 0:
+            guess_freq = 110  # Set default value to 110 if guess_freq is not set
+        self.label_frequency.config(text=f"Frequency: {guess_freq:.2f} Hz")
+        self.label_pitch.config(text=f"Pitch: {guess_freq}")
 
     def submit_guess(self):
         guess_freq = self.slider.get()
+        if guess_freq is None or guess_freq <= 0:
+            guess_freq = 110  # Set default value to 110 if guess_freq is not set
 
         # Calculate the pitch difference and score
         diff_in_semitones = pitch_difference(self.actual_frequency, guess_freq)
