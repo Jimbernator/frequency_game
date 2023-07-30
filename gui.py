@@ -95,24 +95,12 @@ def pitch_difference(frequency1, frequency2):
 
     return semitones_difference
 
-def get_user_input():
-    while True:
-        user_input = input("Enter your guess for the frequency in Hz: ")
-        try:
-            guess_freq = float(user_input)
-            if guess_freq <= 0:
-                raise ValueError
-            return guess_freq
-        except ValueError:
-            print("Invalid input! Please enter a positive number.")
-
-
 class FrequencyGuessingGame:
     def __init__(self):
         self.max_rounds = 10
         self.current_round = 0
         self.score = 0
-        self.actual_frequency = 0
+        self.actual_frequency = 1
         self.sinewave = pysinewave.SineWave(pitch=self.actual_frequency, pitch_per_second=300)
         self.sinewave.play()
 
@@ -120,6 +108,8 @@ class FrequencyGuessingGame:
         self.root.title("Frequency Guessing Game")
         self.create_widgets()
         self.start_new_round()
+        # Variable to track whether slider change is already being handled
+        self.is_handling_slider_change = False
 
     def create_widgets(self):
         self.label_frequency = ttk.Label(self.root, text="Frequency:")
@@ -141,21 +131,28 @@ class FrequencyGuessingGame:
         self.label_slider_value.pack()
 
     def on_slider_change(self, value):
-        # Get the current slider value
-        frequency = float(value)
+        if not self.is_handling_slider_change:
+            # Set the variable to indicate we are currently handling the change event
+            self.is_handling_slider_change = True
 
-        # Calculate the pitch for each valid frequency
-        valid_frequencies = np.logspace(np.log10(110), np.log10(880), num=36 + 1)
-        valid_pitches = [frequency_to_pitch(freq) for freq in valid_frequencies]
+            # Get the current slider value
+            frequency = float(value)
 
-        # Find the closest pitch to the current frequency
-        closest_pitch = min(valid_pitches, key=lambda pitch: abs(frequency - pitch_to_frequency(pitch)))
+            # Calculate the pitch for each valid frequency
+            valid_frequencies = np.logspace(np.log10(110), np.log10(880), num=36 + 1)
+            valid_pitches = [frequency_to_pitch(freq) for freq in valid_frequencies]
 
-        # Set the slider value to the frequency of the closest pitch
-        # self.slider.set(pitch_to_frequency(closest_pitch))
+            # Find the closest pitch to the current frequency
+            closest_pitch = min(valid_pitches, key=lambda pitch: abs(frequency - pitch_to_frequency(pitch)))
 
-        # Update the frequency and pitch labels with the current slider value
-        self.update_frequency_pitch_labels(self.slider.get())
+            # Set the slider value to the frequency of the closest pitch
+            self.slider.set(pitch_to_frequency(closest_pitch))
+
+            # Update the frequency and pitch labels with the current slider value
+            self.update_frequency_pitch_labels(self.slider.get())
+
+            # Unset the variable after handling the change event
+            self.is_handling_slider_change = False
 
 
     def update_frequency_pitch_labels(self, value):
