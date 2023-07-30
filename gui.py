@@ -124,7 +124,7 @@ class FrequencyGuessingGame:
         self.label_pitch = ttk.Label(self.root, text="Pitch:")
         self.label_pitch.pack()
 
-        self.slider = ttk.Scale(self.root, from_=110, to=880, orient="horizontal", command=self.on_slider_change, length=300)
+        self.slider = ttk.Scale(self.root, from_=110, to=880, orient="horizontal", command=self.on_slider_change, length=500)
         self.slider.pack()
 
         self.submit_button = ttk.Button(self.root, text="Submit", command=self.submit_guess)
