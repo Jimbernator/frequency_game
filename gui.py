@@ -102,7 +102,7 @@ class FrequencyGuessingGame:
         self.label_pitch = ttk.Label(self.root, text="Pitch:")
         self.label_pitch.pack()
 
-        self.slider = ttk.Scale(self.root, from_=110, to=880, orient="horizontal")
+        self.slider = ttk.Scale(self.root, from_=110, to=880, orient="horizontal", command=self.update_frequency_pitch_labels)
         self.slider.pack()
 
         self.submit_button = ttk.Button(self.root, text="Submit", command=self.submit_guess)
@@ -110,6 +110,17 @@ class FrequencyGuessingGame:
 
         self.label_score = ttk.Label(self.root, text="Score:")
         self.label_score.pack()
+
+        self.label_slider_value = ttk.Label(self.root, text="")
+        self.label_slider_value.pack()
+
+    def update_frequency_pitch_labels(self, value):
+        # Get the slider value (frequency) and update the labels accordingly
+        frequency = float(value)
+        pitch = frequency_to_pitch(frequency)
+
+        self.label_frequency.config(text=f"Frequency: {frequency:.2f} Hz")
+        self.label_pitch.config(text=f"Pitch: {pitch}")
 
     def start_new_round(self):
         self.current_round += 1
