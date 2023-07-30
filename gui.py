@@ -61,6 +61,28 @@ def frequency_to_pitch(frequency):
 
     return pitch_notation
 
+def pitch_to_frequency(pitch):
+    # The pitch notation consists of a letter representing the note (A, B, C, etc.)
+    # and a number representing the octave (4, 5, 6, etc.)
+    # The formula for converting pitch to frequency is the reverse of the frequency_to_pitch formula:
+    # frequency = 440 * 2 ** ((pitch - 69) / 12)
+    # where 440 Hz is the frequency of A4 (the A above middle C)
+
+    # Split the pitch notation into the note and octave parts
+    note, octave = pitch[:-1], int(pitch[-1])
+
+    # Define the notes and their corresponding indices
+    notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+    note_index = notes.index(note)
+
+    # Calculate the pitch value using the formula
+    pitch_value = (octave + 1) * 12 + note_index
+
+    # Calculate the frequency using the reverse formula
+    frequency = 440 * 2 ** ((pitch_value - 69) / 12)
+
+    return frequency
+
 def pitch_difference(frequency1, frequency2):
     # Calculate the pitch in semitones
     pitch1 = 69 + 12 * np.log2(frequency1 / 440)
@@ -102,7 +124,7 @@ class FrequencyGuessingGame:
         self.label_pitch = ttk.Label(self.root, text="Pitch:")
         self.label_pitch.pack()
 
-        self.slider = ttk.Scale(self.root, from_=110, to=880, orient="horizontal", command=self.update_frequency_pitch_labels, length=300)
+        self.slider = ttk.Scale(self.root, from_=110, to=880, orient="horizontal", command=self.on_slider_change, length=300)
         self.slider.pack()
 
         self.submit_button = ttk.Button(self.root, text="Submit", command=self.submit_guess)
@@ -113,6 +135,24 @@ class FrequencyGuessingGame:
 
         self.label_slider_value = ttk.Label(self.root, text="")
         self.label_slider_value.pack()
+
+    def on_slider_change(self, value):
+        # Get the current slider value
+        frequency = float(value)
+
+        # Calculate the pitch for each valid frequency
+        valid_frequencies = np.logspace(np.log10(110), np.log10(880), num=36 + 1)
+        valid_pitches = [frequency_to_pitch(freq) for freq in valid_frequencies]
+
+        # Find the closest pitch to the current frequency
+        closest_pitch = min(valid_pitches, key=lambda pitch: abs(frequency - pitch_to_frequency(pitch)))
+
+        # Set the slider value to the frequency of the closest pitch
+        # self.slider.set(pitch_to_frequency(closest_pitch))
+
+        # Update the frequency and pitch labels with the current slider value
+        self.update_frequency_pitch_labels(self.slider.get())
+
 
     def update_frequency_pitch_labels(self, value):
         # Get the slider value (frequency) and update the labels accordingly
@@ -133,8 +173,9 @@ class FrequencyGuessingGame:
 
         play_tone(self.actual_frequency, self.sinewave, duration_ms=2000)
 
-        self.label_frequency.config(text=f"Frequency: {self.actual_frequency:.2f} Hz")
-        self.label_pitch.config(text=f"Pitch: {self.actual_pitch}")
+        # self.label_frequency.config(text=f"Frequency: {self.actual_frequency:.2f} Hz")
+        # self.update_frequency_pitch_labels(self.slider.get())
+        # self.label_pitch.config(text=f"Pitch: {self.actual_pitch}")
 
     def submit_guess(self):
         guess_freq = self.slider.get()
@@ -145,7 +186,7 @@ class FrequencyGuessingGame:
         self.score += round_score
 
         self.label_score.config(text=f"Score: {self.score}")
-        messagebox.showinfo("Result", f"Your guess: {guess_freq:.2f} Hz\nPitch Difference: {diff_in_semitones:.2f} semitones.")
+        messagebox.showinfo("Result", f"Actual Frequency: {self.actual_frequency:.2f} Hz ({frequency_to_pitch(self.actual_frequency)})\nYour guess: {guess_freq:.2f} Hz ({frequency_to_pitch(guess_freq)})\nPitch Difference: {diff_in_semitones:.2f} semitones.")
 
         if self.current_round < self.max_rounds:
             self.start_new_round()
