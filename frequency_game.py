@@ -93,24 +93,13 @@ def main():
         actual_frequency = generate_random_frequency()
 
         # Play the tone for a short duration
-        # print(f"Round {current_round}: Listen to the tone.")
-        print(f"Round {current_round}/{max_rounds}: Listen to the tone at {actual_frequency:.2f} Hz ({frequency_to_pitch(actual_frequency)}).")
+        print(f"Round {current_round}: Listen to the tone.")
+        # print(f"Round {current_round}/{max_rounds}: Listen to the tone at {actual_frequency:.2f} Hz ({frequency_to_pitch(actual_frequency)}).")
 
         play_tone(actual_frequency, sinewave, duration_ms=2000)
 
         # Get player's guess for the frequency
-        # guess = input(f"Round {current_round}/{max_rounds}: Guess the frequency (in Hz): ")
-
-        # Get player's guess for the frequency
         guess_freq = get_user_input()
-
-
-        # # Convert the guess to an integer (if possible)
-        # try:
-        #     guess_freq = int(guess)
-        # except ValueError:
-        #     print("Invalid input. Please enter a valid integer.")
-        #     continue
 
         # Calculate the score and update total score
         round_score = calculate_score(actual_frequency, guess_freq)
