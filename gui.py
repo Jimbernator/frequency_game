@@ -45,20 +45,22 @@ def calculate_score(actual_freq, guess_freq):
 
 def frequency_to_pitch(frequency):
     # The pitch notation consists of a letter representing the note (A, B, C, etc.)
-    # and a number representing the octave (4, 5, 6, etc.)
+    # and a number representing the octave (0, 1, 2, etc.).
     # The formula for converting frequency to pitch is:
     # pitch = 69 + 12 * log2(frequency / 440)
-    # where 440 Hz is the frequency of A4 (the A above middle C)
+    # where 440 Hz is the frequency of A4 (the A above middle C).
 
     # Calculate the pitch using the formula
     pitch = 69 + 12 * np.log2(frequency / 440)
 
+    # Round the pitch to the nearest whole number to get the index of the note
+    note_index = round(pitch) % 12
+
+    # Get the octave from the pitch value
+    octave = int((pitch - 11.5) // 12)  # Adjusting the octave numbering
+
     # Define the notes and their corresponding names
     notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
-
-    # Get the note and octave from the pitch value
-    note_index = int(round(pitch)) % 12
-    octave = int((pitch + 9) // 12)
 
     # Create the pitch notation (e.g., A4, C5, G#3, etc.)
     pitch_notation = f"{notes[note_index]}{octave}"
@@ -138,13 +140,9 @@ class FrequencyGuessingGame:
             # Get the current slider value
             frequency = float(value)
 
-            # Calculate the pitch for each valid frequency
-            valid_frequencies = np.logspace(np.log10(110), np.log10(880), num=36 + 1)
-            valid_pitches = [frequency_to_pitch(freq) for freq in valid_frequencies]
-
             # Find the closest pitch to the current frequency
-            closest_pitch = min(valid_pitches, key=lambda pitch: abs(frequency - pitch_to_frequency(pitch)))
-
+            closest_pitch = frequency_to_pitch(frequency=frequency)
+            
             # Set the slider value to the frequency of the closest pitch
             self.slider.set(pitch_to_frequency(closest_pitch))
 

@@ -4,10 +4,10 @@ import numpy as np
 
 def frequency_to_pitch(frequency):
     # The pitch notation consists of a letter representing the note (A, B, C, etc.)
-    # and a number representing the octave (4, 5, 6, etc.)
+    # and a number representing the octave (0, 1, 2, etc.).
     # The formula for converting frequency to pitch is:
     # pitch = 69 + 12 * log2(frequency / 440)
-    # where 440 Hz is the frequency of A4 (the A above middle C)
+    # where 440 Hz is the frequency of A4 (the A above middle C).
 
     # Calculate the pitch using the formula
     pitch = 69 + 12 * np.log2(frequency / 440)
@@ -16,7 +16,7 @@ def frequency_to_pitch(frequency):
     note_index = round(pitch) % 12
 
     # Get the octave from the pitch value
-    octave = int((pitch + 9) // 12)
+    octave = int((pitch - 11.5) // 12)  # Adjusting the octave numbering
 
     # Define the notes and their corresponding names
     notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
