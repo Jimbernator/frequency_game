@@ -82,7 +82,7 @@ def main():
 
         # Play the tone for a short duration
         # print(f"Round {current_round}: Listen to the tone.")
-        print(f"Round {current_round}: Listen to the tone at {actual_frequency:.2f} Hz ({frequency_to_pitch(actual_frequency)}).")
+        print(f"Round {current_round}/{max_rounds}: Listen to the tone at {actual_frequency:.2f} Hz ({frequency_to_pitch(actual_frequency)}).")
 
         play_tone(actual_frequency, sinewave, duration_ms=2000)
 
@@ -101,7 +101,7 @@ def main():
         score += round_score
 
         # Show feedback to the player
-        feedback_text = f"Round {current_round}: Actual Frequency: {actual_frequency} Hz ({frequency_to_pitch(actual_frequency)}), Your Guess: {guess_freq} Hz, Score: {round_score}"
+        feedback_text = f"Round {current_round}/{max_rounds}: Actual Frequency: {actual_frequency:.2f} Hz ({frequency_to_pitch(actual_frequency)}), Your Guess: {guess_freq} Hz, Score: {round_score}"
         print(feedback_text)
 
         # Wait for a short time before moving to the next round
