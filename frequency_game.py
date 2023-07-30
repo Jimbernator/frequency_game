@@ -68,6 +68,18 @@ def pitch_difference(frequency1, frequency2):
 
     return semitones_difference
 
+def get_user_input():
+    while True:
+        user_input = input("Enter your guess for the frequency in Hz: ")
+        try:
+            guess_freq = float(user_input)
+            if guess_freq <= 0:
+                raise ValueError
+            return guess_freq
+        except ValueError:
+            print("Invalid input! Please enter a positive number.")
+
+
 def main():
     max_rounds = 10
     current_round = 0
@@ -87,14 +99,18 @@ def main():
         play_tone(actual_frequency, sinewave, duration_ms=2000)
 
         # Get player's guess for the frequency
-        guess = input(f"Round {current_round}/{max_rounds}: Guess the frequency (in Hz): ")
+        # guess = input(f"Round {current_round}/{max_rounds}: Guess the frequency (in Hz): ")
 
-        # Convert the guess to an integer (if possible)
-        try:
-            guess_freq = int(guess)
-        except ValueError:
-            print("Invalid input. Please enter a valid integer.")
-            continue
+        # Get player's guess for the frequency
+        guess_freq = get_user_input()
+
+
+        # # Convert the guess to an integer (if possible)
+        # try:
+        #     guess_freq = int(guess)
+        # except ValueError:
+        #     print("Invalid input. Please enter a valid integer.")
+        #     continue
 
         # Calculate the score and update total score
         round_score = calculate_score(actual_frequency, guess_freq)
