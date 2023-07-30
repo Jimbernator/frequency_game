@@ -30,6 +30,10 @@ def calculate_score(actual_freq, guess_freq):
     # Calculate the pitch difference in semitones between the actual and guessed frequencies
     pitch_diff = pitch_difference(actual_freq, guess_freq)
 
+    # Handle the special case when the guess matches the actual frequency perfectly
+    if abs(pitch_diff) <= 0.5:
+        return 1000
+
     # Map the pitch difference to a score between 0 and 1000
     # In this example, we're using a linear mapping, but you can adjust it as needed
     # Smaller pitch_diff will result in a higher score, and vice versa
@@ -186,7 +190,7 @@ class FrequencyGuessingGame:
         self.score += round_score
 
         self.label_score.config(text=f"Score: {self.score}")
-        messagebox.showinfo("Result", f"Actual Frequency: {self.actual_frequency:.2f} Hz ({frequency_to_pitch(self.actual_frequency)})\nYour guess: {guess_freq:.2f} Hz ({frequency_to_pitch(guess_freq)})\nPitch Difference: {diff_in_semitones:.2f} semitones.")
+        messagebox.showinfo("Result", f"Actual Frequency: {self.actual_frequency:.2f} Hz ({frequency_to_pitch(self.actual_frequency)})\nYour guess: {guess_freq:.2f} Hz ({frequency_to_pitch(guess_freq)})\nPitch Difference: {diff_in_semitones:.2f} semitones.\nScore: {round_score}")
 
         if self.current_round < self.max_rounds:
             self.start_new_round()
@@ -194,8 +198,8 @@ class FrequencyGuessingGame:
             self.end_game()
 
     def end_game(self):
-        messagebox.showinfo("Game Over", f"Game Over! Your final score: {self.score} / {1000*self.max_rounds}")
         self.sinewave.stop()
+        messagebox.showinfo("Game Over", f"Game Over! Your final score: {self.score} / {1000*self.max_rounds}")
         self.root.destroy()
 
     def run(self):
