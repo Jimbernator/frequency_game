@@ -19,7 +19,7 @@ def generate_random_frequency():
     # Choose a random frequency from the generated frequencies
     return random.choice(frequencies)
 
-def play_tone(frequency, sinewave, duration_ms):
+def play_tone(frequency, sinewave):
 
     sinewave.set_frequency(frequency=frequency)
     # sinewave.set_pitch(pitch=frequency)
@@ -174,13 +174,13 @@ class FrequencyGuessingGame:
         print(f"Round {self.current_round}: Listen to the tone.")
         # print(f"Round {current_round}/{max_rounds}: Listen to the tone at {actual_frequency:.2f} Hz ({frequency_to_pitch(actual_frequency)}).")
 
-        play_tone(self.actual_frequency, self.sinewave, duration_ms=2000)
+        play_tone(self.actual_frequency, self.sinewave)
 
         guess_freq = self.slider.get()
         if guess_freq is None or guess_freq <= 0:
             guess_freq = 110  # Set default value to 110 if guess_freq is not set
         self.label_frequency.config(text=f"Frequency: {guess_freq:.2f} Hz")
-        self.label_pitch.config(text=f"Pitch: {guess_freq}")
+        self.label_pitch.config(text=f"Pitch: {frequency_to_pitch(guess_freq)}")
 
     def submit_guess(self):
         guess_freq = self.slider.get()
