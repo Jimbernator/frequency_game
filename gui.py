@@ -194,7 +194,7 @@ class FrequencyGuessingGame:
 
         self.label_score.config(text=f"Score: {self.score}")
         messagebox.showinfo("Result", f"Actual Frequency: {self.actual_frequency:.2f} Hz ({frequency_to_pitch(self.actual_frequency)})\nYour guess: {guess_freq:.2f} Hz ({frequency_to_pitch(guess_freq)})\nPitch Difference: {diff_in_semitones:.2f} semitones.\nScore: {round_score}")
-
+        print("Result", f"Actual Frequency: {self.actual_frequency:.2f} Hz ({frequency_to_pitch(self.actual_frequency)})\nYour guess: {guess_freq:.2f} Hz ({frequency_to_pitch(guess_freq)})\nPitch Difference: {diff_in_semitones:.2f} semitones.\nScore: {round_score}")
         if self.current_round < self.max_rounds:
             self.start_new_round()
         else:
