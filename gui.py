@@ -110,30 +110,30 @@ class FrequencyGuessingGame:
         self.sinewave = pysinewave.SineWave(pitch=self.actual_frequency, pitch_per_second=300)
         self.sinewave.play()
 
-        self.root = tk.Tk()
-        self.root.title("Frequency Guessing Game")
+        self.tkApp = tk.Tk()
+        self.tkApp.title("Frequency Guessing Game")
         self.create_widgets()
         self.start_new_round()
         # Variable to track whether slider change is already being handled
         self.is_handling_slider_change = False
 
     def create_widgets(self):
-        self.label_frequency = ttk.Label(self.root, text="Frequency:")
+        self.label_frequency = ttk.Label(self.tkApp, text="Frequency:")
         self.label_frequency.pack()
 
-        self.label_pitch = ttk.Label(self.root, text="Pitch:")
+        self.label_pitch = ttk.Label(self.tkApp, text="Pitch:")
         self.label_pitch.pack()
 
-        self.slider = ttk.Scale(self.root, from_=110, to=880, orient="horizontal", command=self.on_slider_change, length=500)
+        self.slider = ttk.Scale(self.tkApp, from_=110, to=880, orient="horizontal", command=self.on_slider_change, length=500)
         self.slider.pack()
 
-        self.submit_button = ttk.Button(self.root, text="Submit", command=self.submit_guess)
+        self.submit_button = ttk.Button(self.tkApp, text="Submit", command=self.submit_guess)
         self.submit_button.pack()
 
-        self.label_score = ttk.Label(self.root, text="Score:")
+        self.label_score = ttk.Label(self.tkApp, text="Score:")
         self.label_score.pack()
 
-        self.label_slider_value = ttk.Label(self.root, text="")
+        self.label_slider_value = ttk.Label(self.tkApp, text="")
         self.label_slider_value.pack()
 
     def on_slider_change(self, value):
@@ -203,10 +203,10 @@ class FrequencyGuessingGame:
     def end_game(self):
         self.sinewave.stop()
         messagebox.showinfo("Game Over", f"Game Over! Your final score: {self.score} / {1000*self.max_rounds}")
-        self.root.destroy()
+        self.tkApp.destroy()
 
     def run(self):
-        self.root.mainloop()
+        self.tkApp.mainloop()
 
 def main():
     game = FrequencyGuessingGame()
